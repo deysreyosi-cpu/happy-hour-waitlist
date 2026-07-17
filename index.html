@@ -5,8 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>content happy hour — the waitlist</title>
 <meta name="description" content="your whole content system, built in one sitting, run on one hour a week. join the waitlist.">
+<meta property="og:title" content="content happy hour — the waitlist">
+<meta property="og:description" content="your whole content system, built in one sitting, run on one hour a week.">
+<meta property="og:image" content="https://deysreyosi-cpu.github.io/happy-hour-waitlist/waitlist-og-cover.png">
+<meta property="og:url" content="https://deysreyosi-cpu.github.io/happy-hour-waitlist/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://deysreyosi-cpu.github.io/happy-hour-waitlist/waitlist-og-cover.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<!-- MailerLite Universal -->
+<script>
+    (function(w,d,e,u,f,l,n){w[f]=w[f]||function(){(w[f].q=w[f].q||[])
+    .push(arguments);},l=d.createElement(e),l.async=1,l.src=u,
+    n=d.getElementsByTagName(e)[0],n.parentNode.insertBefore(l,n);})
+    (window,document,'script','https://assets.mailerlite.com/js/universal.js','ml');
+    ml('account', '1055285');
+</script>
+<!-- End MailerLite Universal -->
 <style>
   :root{
     --beige:#F0EAE0; --cream:#F7F3EB; --butter:#F2D98A; --butter-soft:#F7E7B6; --butter-deep:#E8C765;
@@ -156,8 +172,10 @@
 
   <!-- FORM HOOKUP: paste your MailerLite form action URL into both action="" attributes,
        or replace the two <form> blocks with MailerLite's embedded form snippet. -->
-  <form class="form-card" action="PASTE-YOUR-MAILERLITE-FORM-ACTION-URL-HERE" method="post" onsubmit="return happyCheck(this)">
+  <form class="form-card" action="https://assets.mailerlite.com/jsonp/1055285/forms/193204460062770809/subscribe" method="post" onsubmit="return happySubmit(event, this)">
     <input type="email" name="fields[email]" placeholder="your best email" required>
+    <input type="hidden" name="ml-submit" value="1">
+    <input type="hidden" name="anticsrf" value="true">
     <button type="submit">save my spot</button>
     <div class="msg"></div>
   </form>
@@ -229,8 +247,10 @@
   <h2><svg viewBox="0 0 32 32" fill="none"><path d="M5 6h22l-9.5 10.5" stroke="#3B2E22" stroke-width="1.8" stroke-linecap="round"/><path d="M5 6c1 3.5 5 6 11 6s10-2.5 11-6" fill="#C3D9E8" stroke="#3B2E22" stroke-width="1.8"/><path d="M16 12.5V24" stroke="#3B2E22" stroke-width="1.8" stroke-linecap="round"/><path d="M9.5 26h13" stroke="#3B2E22" stroke-width="1.8" stroke-linecap="round"/><circle cx="26" cy="5" r="3.4" fill="#CFDFC5" stroke="#3B2E22" stroke-width="1.5"/></svg> doors open soon</h2>
   <p class="sub">waitlist gets first access, before anyone else</p>
 
-  <form class="form-card" action="PASTE-YOUR-MAILERLITE-FORM-ACTION-URL-HERE" method="post" onsubmit="return happyCheck(this)">
+  <form class="form-card" action="https://assets.mailerlite.com/jsonp/1055285/forms/193204460062770809/subscribe" method="post" onsubmit="return happySubmit(event, this)">
     <input type="email" name="fields[email]" placeholder="your best email" required>
+    <input type="hidden" name="ml-submit" value="1">
+    <input type="hidden" name="anticsrf" value="true">
     <button type="submit">i'm in</button>
     <div class="msg"></div>
   </form>
@@ -245,14 +265,26 @@
 </section>
 
 <script>
-  function happyCheck(f){
-    if(f.action.includes('PASTE-YOUR')){
-      var m=f.querySelector('.msg');
-      m.style.display='block';
-      m.textContent='almost! paste your MailerLite form URL into the HTML first.';
-      return false;
+  async function happySubmit(e, f){
+    e.preventDefault();
+    var m = f.querySelector('.msg');
+    var b = f.querySelector('button');
+    b.disabled = true;
+    b.textContent = 'one sec...';
+    try {
+      var r = await fetch(f.action, { method: 'POST', body: new FormData(f) });
+      if (!r.ok) throw new Error('bad response');
+      m.style.display = 'block';
+      m.textContent = "you're in! keep an eye on your inbox 🍋";
+      f.querySelector('input[type=email]').value = '';
+      b.textContent = 'saved ✓';
+    } catch (err) {
+      m.style.display = 'block';
+      m.textContent = "hmm, that didn't go through. give it one more try?";
+      b.textContent = 'try again';
+      b.disabled = false;
     }
-    return true;
+    return false;
   }
 </script>
 
